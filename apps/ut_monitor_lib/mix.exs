@@ -1,8 +1,8 @@
-defmodule UtMonitorApis.Mixfile do
+defmodule UtMonitorLib.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :ut_monitor_apis,
+    [app: :ut_monitor_lib,
      version: "0.1.0",
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,

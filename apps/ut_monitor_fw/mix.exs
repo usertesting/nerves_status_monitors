@@ -29,7 +29,7 @@ defmodule UtMonitorFw.Mixfile do
       {:nerves, "~> 0.3.0"},
       {:nerves_interim_wifi, "~> 0.1"},
       {:nerves_ntp, "~> 0.1"},
-      {:ut_monitor_apis, in_umbrella: true},
+      {:ut_monitor_lib, in_umbrella: true},
       {:nerves_uart, "~> 0.1.1"}
     ]
   end

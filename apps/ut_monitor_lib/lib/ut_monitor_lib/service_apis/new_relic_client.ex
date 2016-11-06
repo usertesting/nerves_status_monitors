@@ -1,4 +1,4 @@
-defmodule UtMonitorApis.NewRelicClient do
+defmodule UtMonitorLib.ServiceApis.NewRelicClient do
   use Tesla
   
   @apdex_timeslice 5 * 60 # five minute slices
@@ -6,7 +6,7 @@ defmodule UtMonitorApis.NewRelicClient do
   @new_relic_app_id "348677"
   
   plug Tesla.Middleware.BaseUrl, "https://api.newrelic.com/v2"
-  plug Tesla.Middleware.Headers, %{"X-Api-Key" => Application.get_env(:ut_monitor_apis, :new_relic).api_key}
+  plug Tesla.Middleware.Headers, %{"X-Api-Key" => Application.get_env(:ut_monitor_lib, :new_relic).api_key}
   plug Tesla.Middleware.JSON
   
   def get_apdex_data(num_slices \\ 72) do

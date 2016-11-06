@@ -1,6 +1,6 @@
-defmodule UtMonitorApis.NewRelicTest do
+defmodule UtMonitorLib.ServiceApis.NewRelicTest do
   use ExUnit.Case
-  alias UtMonitorApis.NewRelic
+  alias UtMonitorLib.ServiceApis.NewRelic
   
   defmodule GoodTeslaClient do
     def get_apdex_data do
