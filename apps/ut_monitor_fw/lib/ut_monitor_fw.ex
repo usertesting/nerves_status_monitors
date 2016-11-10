@@ -3,7 +3,7 @@ defmodule UtMonitorFw do
   alias Nerves.InterimWiFi, as: WiFi
   
   @arduino_tty "ttyS0"
-  @arduino_baud 115200
+  @arduino_baud 115_200
 
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
   # for more information on OTP Applications

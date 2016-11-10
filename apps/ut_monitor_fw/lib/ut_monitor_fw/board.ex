@@ -12,7 +12,7 @@ defmodule UtMonitorFw.Board do
 
   ## GENSERVER CALLBACKS ##
   def init({port, opts}) do
-    speed = opts[:speed] || 57600
+    speed = opts[:speed] || 57_600
     uart_opts = [speed: speed, active: true]
 
     {:ok, serial} = Nerves.UART.start_link
