@@ -1,5 +1,5 @@
 defmodule UtMonitorLib.ServiceApis.NewRelicTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   alias UtMonitorLib.ServiceApis.NewRelic
   
   defmodule GoodTeslaClient do
