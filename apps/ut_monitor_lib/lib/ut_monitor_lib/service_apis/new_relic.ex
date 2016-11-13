@@ -1,7 +1,7 @@
 defmodule UtMonitorLib.ServiceApis.NewRelic do
 
-  def get_apdex_values(client \\ UtMonitorLib.ServiceApis.NewRelicClient) do
-    case client.get_apdex_data do
+  def get_apdex_values(app_id, client \\ UtMonitorLib.ServiceApis.NewRelicClient) do
+    case client.get_apdex_data(app_id) do
       %Tesla.Env{body: body, status: 200} ->
         {:ok, parse_apdex_values(body)}
       %Tesla.Env{body: body} ->
