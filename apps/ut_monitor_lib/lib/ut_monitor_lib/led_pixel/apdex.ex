@@ -2,17 +2,20 @@ defmodule UtMonitorLib.LedPixel.Apdex do
 
   alias UtMonitorLib.LedPixel
 
-  def from_score(apdex, age \\ 0) do
-    %LedPixel{h: apdex_hue(apdex), s: 255, l: age_to_lightness(age), effect: apdex_effect(apdex)}
-  end
-
-  @max_brightness 64
-  @min_brightness 28
   @steps 72
-  defp age_to_lightness(age) do
-    #progressively decrease brightness as get older
-    #map linearly from 64 (about 25% brightness) down to 28 (about 11%) at age 71
-    Kernel.round(@max_brightness - age * (@max_brightness-@min_brightness) / @steps)
+
+  def aged_pixels_from_scorelist(apdex_values) do
+    #Oldest apdex comes first, so we want to reverse it so that oldest get the biggest ages
+    #Then we need to reverse it again, so that the LED for the oldest apdex value is furthest down the strip
+    apdex_values |>
+      Enum.reverse |>
+      Enum.with_index |>
+      Enum.map(fn({apdex, age}) -> from_score(apdex, age) end) |>
+      Enum.reverse
+  end
+  
+  def from_score(apdex, age \\ 0) do
+    %LedPixel{h: apdex_hue(apdex), s: 255, l: LedPixel.age_to_lightness(age, @steps), effect: apdex_effect(apdex)}
   end
 
   @low_green_apdex 0.99
@@ -31,12 +34,12 @@ defmodule UtMonitorLib.LedPixel.Apdex do
     Kernel.round((120 / (@low_green_apdex - @high_red_apdex)) * (apdex - @high_red_apdex))
   end
 
-  defp apdex_effect(apdex) when apdex >= @apdex_blink_threshhold do
-    nil
-  end
-
   defp apdex_effect(apdex) when apdex < @apdex_blink_threshhold do
     "blink"
+  end
+
+  defp apdex_effect(_) do
+    nil
   end
 
 end
