@@ -14,7 +14,7 @@ defmodule UtMonitorLib.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :timex]]
+    [applications: [:logger, :timex, :tesla, :inets, :poison]]
   end
 
   # Dependencies can be Hex packages:

@@ -1,7 +1,7 @@
 defmodule UtMonitorFw do
   use Application
   alias Nerves.InterimWiFi, as: WiFi
-  
+
   @arduino_tty "ttyS0"
   @arduino_baud 115_200
 
@@ -14,7 +14,9 @@ defmodule UtMonitorFw do
     children = [
       worker(Task, [fn -> network end], restart: :transient),
       worker(UtMonitorFw.Board, [@arduino_tty, %{speed: @arduino_baud}]),
-      # worker(UtMonitorFw.Worker, [arg1, arg2, arg3]),
+      worker(UtMonitorFw.NotificationEngine, []),
+      supervisor(UtMonitorFw.MonitorSupervisor, []),
+    #  supervisor(UtMonitorFw.HardwareSupervisor, [Application.get_env(:ut_monitor_fw, :hardware_spec)])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
@@ -23,9 +25,9 @@ defmodule UtMonitorFw do
     Supervisor.start_link(children, opts)
   end
 
-    def network do
-      wlan_config = Application.get_env(:ut_monitor_fw, :wlan0)
-      WiFi.setup "wlan0", wlan_config
-    end
+  def network do
+    wlan_config = Application.get_env(:ut_monitor_fw, :wlan0)
+    WiFi.setup "wlan0", wlan_config
+  end
 
 end

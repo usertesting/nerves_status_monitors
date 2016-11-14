@@ -13,7 +13,7 @@ defmodule UtMonitorLib.LedPixel.Apdex do
       Enum.map(fn({apdex, age}) -> from_score(apdex, age) end) |>
       Enum.reverse
   end
-  
+
   def from_score(apdex, age \\ 0) do
     %LedPixel{h: apdex_hue(apdex), s: 255, l: LedPixel.age_to_lightness(age, @steps), effect: apdex_effect(apdex)}
   end

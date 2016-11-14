@@ -1,6 +1,6 @@
 defmodule UtMonitorFw.HardwareController.LedController do
   use GenServer
-
+  require Logger
   alias UtMonitorLib.LedPixel
 
   ## PUBLIC API ##
@@ -12,17 +12,18 @@ defmodule UtMonitorFw.HardwareController.LedController do
    GenServer.call(pid, :clear)
   end
 
-  def push_pixel(pid, pixel = %LedPixel{}) do
-    GenServer.call(pid, {:push_pixel, pixel})
+  def push_pixels(pid, pixel = %LedPixel{}) do
+    push_pixels(pid, [pixel])
   end
 
-  def push_pixels(pid, pixels) do
+  def push_pixels(pid, pixels) when is_list(pixels) do
     GenServer.call(pid, {:push_pixels, pixels})
   end
 
   ## CALLBACKS ##
 
   def init(pin) do
+    Logger.info "Starting LED Controller on pin #{pin}"
     send_command(pin, "reset:erase:")
     {:ok, %{pin: pin}}
   end
@@ -32,8 +33,7 @@ defmodule UtMonitorFw.HardwareController.LedController do
     {:reply, :ok, state}
   end
 
-  def handle_call({:push_pixel, pixel}, _from, state = %{pin: pin}) do
-    send_command(pin, LedPixel.to_command(pixel))
+  def handle_call({:push_pixels, []}, _from, state) do
     {:reply, :ok, state}
   end
 
