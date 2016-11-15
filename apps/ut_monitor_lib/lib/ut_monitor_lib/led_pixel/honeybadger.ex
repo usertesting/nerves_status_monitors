@@ -8,12 +8,15 @@ defmodule UtMonitorLib.LedPixel.Honeybadger do
     List.flatten([hour_pixels, LedPixel.black_pixel, LedPixel.black_pixel, minute_pixels])
   end
 
+  @minute_rate_log_base 3
+  @hour_rate_log_base 10
+
   def aged_pixels_from_minute_list(error_counts) do
-    aged_pixels_from_list(error_counts, 60, 5)
+    aged_pixels_from_list(error_counts, 60, @minute_rate_log_base)
   end
 
   def aged_pixels_from_hour_list(error_counts) do
-    aged_pixels_from_list(error_counts, 10, 10)
+    aged_pixels_from_list(error_counts, 10, @hour_rate_log_base)
   end
 
   defp aged_pixels_from_list(error_counts, num_slices, log_base) do

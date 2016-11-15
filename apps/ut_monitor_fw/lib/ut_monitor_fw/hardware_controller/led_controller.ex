@@ -5,6 +5,7 @@ defmodule UtMonitorFw.HardwareController.LedController do
 
   ## PUBLIC API ##
   def start_link(pin, opts \\ []) do
+    Logger.info "Start_linking LED Controller on pin #{pin} with name #{opts[:name]}"
     GenServer.start_link(__MODULE__, pin, opts)
   end
 
@@ -38,6 +39,7 @@ defmodule UtMonitorFw.HardwareController.LedController do
   end
 
   def handle_call({:push_pixels, pixels}, _from, state = %{pin: pin}) do
+    Logger.info("Pushing pixels: #{inspect pixels}")
     send_command(pin, Enum.map_join(pixels, ":", fn(pixel) -> LedPixel.to_command(pixel) end))
     {:reply, :ok, state}
   end
