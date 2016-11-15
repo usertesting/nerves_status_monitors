@@ -54,7 +54,7 @@ defmodule UtMonitorFw.HardwareController.LedController do
     UtMonitorFw.Board.send_command("::pause:")
     pixels |>
       Enum.chunk(5, 5, []) |>
-      Enum.each( fn(pix_list) ->
+      Enum.each(fn(pix_list) ->
         pix_list |>
           Enum.map_join(&LedPixel.to_command(&1)) |>
           UtMonitorFw.Board.send_command
