@@ -22,7 +22,7 @@ defmodule UtMonitorFw.NotificationEngine do
 
   def handle_call({:apdex_error}, _from, state) do
     Logger.info("Notification Engine Received :apdex_error")
-    HardwareDispatcher.push_pixels(:apdex_leds, %LedPixel{h: 240, effect: "breathe"})
+    HardwareDispatcher.push_pixels(:apdex_leds, [%LedPixel{h: 240, effect: "breathe"}])
     {:reply, :ok, state}
   end
 
@@ -34,7 +34,7 @@ defmodule UtMonitorFw.NotificationEngine do
 
   def handle_call({:honeybadger_error}, _from, state) do
     Logger.info("Notification Engine Received :honeybadger_error")
-    HardwareDispatcher.push_pixels(:hb_leds, %LedPixel{h: 240, effect: "breathe"})
+    HardwareDispatcher.push_pixels(:hb_leds, [%LedPixel{h: 240, effect: "breathe"}])
     {:reply, :ok, state}
   end
 

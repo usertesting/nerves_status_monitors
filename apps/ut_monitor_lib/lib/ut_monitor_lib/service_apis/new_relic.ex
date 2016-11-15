@@ -1,7 +1,5 @@
 defmodule UtMonitorLib.ServiceApis.NewRelic do
 
-  require Logger
-
   def get_apdex_values(app_id, client \\ UtMonitorLib.ServiceApis.NewRelicClient) do
     case client.get_apdex_data(app_id) do
       :badtime ->

@@ -40,7 +40,7 @@ defmodule UtMonitorFw.HardwareController.LedController do
 
   def handle_call({:push_pixels, pixels}, _from, state = %{pin: pin}) do
     Logger.info("Pushing pixels: #{inspect pixels}")
-    send_command(pin, Enum.map_join(pixels, ":", fn(pixel) -> LedPixel.to_command(pixel) end))
+    send_pixels(pin, pixels)
     {:reply, :ok, state}
   end
 
@@ -48,5 +48,18 @@ defmodule UtMonitorFw.HardwareController.LedController do
 
   defp send_command(_pin, command) do
     UtMonitorFw.Board.send_command("::pause:" <> command <> "continue:")
+  end
+
+  defp send_pixels(_pin, pixels) do
+    UtMonitorFw.Board.send_command("::pause:")
+    pixels |>
+      Enum.chunk(5, 5, []) |>
+      Enum.each( fn(pix_list) ->
+        pix_list |>
+          Enum.map_join(&LedPixel.to_command(&1)) |>
+          UtMonitorFw.Board.send_command
+        end
+      )
+    UtMonitorFw.Board.send_command("continue:")
   end
 end

@@ -13,27 +13,23 @@ defmodule UtMonitorFw.Board do
 
   ## GENSERVER CALLBACKS ##
   def init({port, opts}) do
-    Logger.info "Starting Board Connection"
     speed = opts[:speed] || 57_600
-    uart_opts = [speed: speed, active: true]
+    uart_opts = [speed: speed, active: false]
     send(self, {:start_uart, port, uart_opts})
-    {:ok, %{port: port, conn: nil}}
+    {:ok, %{port: port, conn: nil}}# , buffered_commands: [], waiting_ack: true}}
   end
 
   def handle_call({:send_command, command_str}, _from, state = %{conn: conn}) do
+    Logger.info("Sending to Arduino: " <> command_str)
     Nerves.UART.write(conn, command_str)
+    {:ok, "k"} = Nerves.UART.read(conn)
     {:reply, :ok, state}
   end
 
   def handle_info({:start_uart, port, uart_opts}, state) do
     {:ok, serial} = Nerves.UART.start_link
     :ok = Nerves.UART.open(serial, port, uart_opts)
-    Logger.info "Board Connection Initialized"
     {:noreply, %{state | conn: serial}}
   end
 
-  def handle_info({:nerves_uart, port, data}, state) do
-    Logger.info("Received " <> data <> " on port" <> port)
-    {:noreply, state}
-  end
 end

@@ -23,11 +23,11 @@ defmodule UtMonitorLib.LedPixel do
     "#{effect}:"
   end
 
-  @max_brightness 64
-  @min_brightness 28
+  @max_brightness 50
+  @min_brightness 14
   def age_to_lightness(age, slices) do
     #progressively decrease brightness as get older
-    #map linearly from 64 (about 25% brightness) down to 28 (about 11%) at age 71
+    #map linearly from 50 (about 20% brightness) down to 14 (about 5%) at age 71
     Kernel.round(@max_brightness - age * (@max_brightness-@min_brightness) / slices)
   end
 

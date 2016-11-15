@@ -7,7 +7,6 @@ defmodule UtMonitorFw.MonitorWorker.ApdexWorker do
   @polling_interval 60 * 1000 # 5 minutes in milliseconds
 
   def start_link(app_id, opts \\ []) do
-    Logger.info "Starting Apdex worker"
     GenServer.start_link(__MODULE__, app_id, opts)
   end
 
@@ -26,22 +25,17 @@ defmodule UtMonitorFw.MonitorWorker.ApdexWorker do
   end
 
   def handle_info(:refresh, state = %{app_id: app_id}) do
-    Logger.info "Getting Apdex Values." <> inspect(self)
-    case UtMonitorLib.ServiceApis.NewRelic.get_apdex_values(app_id) do
-      {:ok, apdex_values} ->
-        Logger.info "Got apdex values: " <> inspect(apdex_values)
-        NotificationEngine.display_data({:apdex_values, apdex_values})
-        Process.send_after(self, :refresh, @polling_interval)
-        {:noreply, state}
-      {:error, err_msg} ->
-        Logger.warn "Error retrieving apdex values: #{err_msg}"
-        NotificationEngine.display_data({:apdex_error})
-        Process.send_after(self, :refresh, 15 * 1000)
-        {:noreply, state}
-      msg ->
-        Logger.error "Unknown message in Apdex worker: " <> inspect(msg)
-        {:stop, "Unknown message in Apdex worker", state}
-    end
+    Task.start_link( fn ->
+        case UtMonitorLib.ServiceApis.NewRelic.get_apdex_values(app_id) do
+          {:ok, apdex_values} ->
+            NotificationEngine.display_data({:apdex_values, apdex_values})
+          {:error, err_msg} ->
+            NotificationEngine.display_data({:apdex_error})
+        end
+      end
+    )
+    Process.send_after(self, :refresh, @polling_interval)
+    {:noreply, state}
   end
 
 end

@@ -1,6 +1,6 @@
 defmodule UtMonitorLib.ServiceApis.NewRelicClient do
   use Tesla
-  require Logger
+
   @apdex_timeslice 5 * 60 # five minute slices
   @apdex_numslices 72
 

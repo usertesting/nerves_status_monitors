@@ -7,7 +7,6 @@ defmodule UtMonitorFw.MonitorWorker.HoneybadgerWorker do
   @polling_interval 60 * 1000 # 1 minutes in milliseconds
 
   def start_link(project_id, opts \\ []) do
-    Logger.info "Starting Honeybadger worker"
     GenServer.start_link(__MODULE__, project_id, opts)
   end
 

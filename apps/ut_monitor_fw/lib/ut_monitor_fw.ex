@@ -16,7 +16,7 @@ defmodule UtMonitorFw do
       worker(UtMonitorFw.Board, [@arduino_tty, %{speed: @arduino_baud}]),
       worker(UtMonitorFw.NotificationEngine, []),
       supervisor(UtMonitorFw.MonitorSupervisor, []),
-    #  supervisor(UtMonitorFw.HardwareSupervisor, [Application.get_env(:ut_monitor_fw, :hardware_spec)])
+      supervisor(UtMonitorFw.HardwareSupervisor, [Application.get_env(:ut_monitor_fw, :hardware_spec)])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
