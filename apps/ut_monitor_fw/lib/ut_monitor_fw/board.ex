@@ -1,6 +1,7 @@
 defmodule UtMonitorFw.Board do
   use GenServer
-  
+  require Logger
+
   ## PUBLIC API ##
   def start_link(port, opts \\ []) do
      GenServer.start_link(__MODULE__, {port, opts}, name: __MODULE__)
@@ -12,17 +13,23 @@ defmodule UtMonitorFw.Board do
 
   ## GENSERVER CALLBACKS ##
   def init({port, opts}) do
-    speed = opts[:speed] || 57600
-    uart_opts = [speed: speed, active: true]
-
-    {:ok, serial} = Nerves.UART.start_link
-    :ok = Nerves.UART.open(serial, port, uart_opts)
-
-    {:ok, %{conn: serial}}
+    speed = opts[:speed] || 57_600
+    uart_opts = [speed: speed, active: false]
+    send(self, {:start_uart, port, uart_opts})
+    {:ok, %{port: port, conn: nil}}# , buffered_commands: [], waiting_ack: true}}
   end
 
   def handle_call({:send_command, command_str}, _from, state = %{conn: conn}) do
+    Logger.info("Sending to Arduino: " <> command_str)
     Nerves.UART.write(conn, command_str)
+    {:ok, "k"} = Nerves.UART.read(conn)
     {:reply, :ok, state}
   end
+
+  def handle_info({:start_uart, port, uart_opts}, state) do
+    {:ok, serial} = Nerves.UART.start_link
+    :ok = Nerves.UART.open(serial, port, uart_opts)
+    {:noreply, %{state | conn: serial}}
+  end
+
 end

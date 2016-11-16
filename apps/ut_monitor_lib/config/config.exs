@@ -10,11 +10,11 @@ use Mix.Config
 
 # You can configure for your application as:
 #
-#     config :ut_monitor_apis, key: :value
+#     config :ut_monitor_lib, key: :value
 #
 # And access this configuration in your application as:
 #
-#     Application.get_env(:ut_monitor_apis, :key)
+#     Application.get_env(:ut_monitor_lib, :key)
 #
 # Or configure a 3rd-party app:
 #

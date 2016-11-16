@@ -1,8 +1,8 @@
-defmodule UtMonitorApis.Mixfile do
+defmodule UtMonitorLib.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :ut_monitor_apis,
+    [app: :ut_monitor_lib,
      version: "0.1.0",
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
@@ -14,7 +14,7 @@ defmodule UtMonitorApis.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :timex]]
+    [applications: [:logger, :timex, :tesla, :inets, :poison]]
   end
 
   # Dependencies can be Hex packages:
@@ -30,7 +30,8 @@ defmodule UtMonitorApis.Mixfile do
     [
       {:tesla, "~> 0.5.0"},
       {:poison, ">= 1.0.0"},
-      {:timex, "~> 3.0"}
+      {:timex, "~> 3.0"},
+      {:credo, "~> 0.4", only: [:dev, :test]}
     ]
   end
 end

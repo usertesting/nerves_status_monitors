@@ -21,7 +21,7 @@ defmodule UtMonitorFw.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {UtMonitorFw, []},
-     applications: [:logger, :nerves_uart, :nerves_interim_wifi, :nerves_ntp]]
+     applications: [:logger, :nerves_uart, :nerves_interim_wifi, :nerves_ntp, :ut_monitor_lib]]
   end
 
   def deps do
@@ -29,8 +29,9 @@ defmodule UtMonitorFw.Mixfile do
       {:nerves, "~> 0.3.0"},
       {:nerves_interim_wifi, "~> 0.1"},
       {:nerves_ntp, "~> 0.1"},
-      {:ut_monitor_apis, in_umbrella: true},
-      {:nerves_uart, "~> 0.1.1"}
+      {:ut_monitor_lib, in_umbrella: true},
+      {:nerves_uart, "~> 0.1.1"},
+      {:credo, "~> 0.4", only: [:dev, :test]}
     ]
   end
 

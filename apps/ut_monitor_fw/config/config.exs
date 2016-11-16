@@ -5,14 +5,16 @@
 # is restricted to this project.
 use Mix.Config
 
-config :ut_monitor_fw, :wlan0,
-  ssid: "User Testing - Guest",
-  key_mgmt: :"WPA-PSK",
-  psk: "usertesting321"
+config :logger,
+  level: :info
 
-
+config :ut_monitor_fw, :hardware_spec,
+  [
+    %{name: :apdex_leds, pin: 5, type: :led}
+  ]
 # Import target specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 # Uncomment to use target specific configurations
 
 # import_config "#{Mix.Project.config[:target]}.exs"
+import_config "secret.exs"

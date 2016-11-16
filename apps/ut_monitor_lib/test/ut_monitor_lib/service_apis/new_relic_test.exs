@@ -1,9 +1,9 @@
-defmodule UtMonitorApis.NewRelicTest do
-  use ExUnit.Case
-  alias UtMonitorApis.NewRelic
+defmodule UtMonitorLib.ServiceApis.NewRelicTest do
+  use ExUnit.Case, async: true
+  alias UtMonitorLib.ServiceApis.NewRelic
   
   defmodule GoodTeslaClient do
-    def get_apdex_data do
+    def get_apdex_data(_app_id) do
       %Tesla.Env{status: 200, body: %{
         "metric_data" => %{
           "metrics" => [
@@ -26,27 +26,27 @@ defmodule UtMonitorApis.NewRelicTest do
   end
   
   test "properly calculates the apdex on a 200 response" do
-    assert NewRelic.get_apdex_values(GoodTeslaClient) == {:ok, [(2050 + 47/2)/(2050 + 47 + 11)]}
+    assert NewRelic.get_apdex_values("213", GoodTeslaClient) == {:ok, [(2050 + 47/2)/(2050 + 47 + 11)]}
   end
   
   defmodule Tesla404Client do
-    def get_apdex_data do
+    def get_apdex_data(_app_id) do
       %Tesla.Env{status: 404, body: "Not Found"}
     end
   end
   
   test "returns the error from the body on a non-200 request" do
-    assert NewRelic.get_apdex_values(Tesla404Client) == {:error, "Not Found"}
+    assert NewRelic.get_apdex_values("213", Tesla404Client) == {:error, "Not Found"}
   end
   
   defmodule NonTeslaEnvClient do
-    def get_apdex_data do
+    def get_apdex_data(_app_id) do
       %{}
     end
   end
   
   test "returns a generic error when a non-Tesla.Env comes back" do
-    assert NewRelic.get_apdex_values(NonTeslaEnvClient) == {:error, "Unknown Error"}
+    assert NewRelic.get_apdex_values("213", NonTeslaEnvClient) == {:error, "Unknown Error"}
   end
   
 end
