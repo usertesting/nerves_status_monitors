@@ -1,6 +1,8 @@
 defmodule UtMonitorFw.HardwareController.RelayController do
   use GenServer
 
+  alias UtMonitorFw.Board
+
   ## PUBLIC API ##
   def start_link(pin, opts \\ []) do
     GenServer.start_link(__MODULE__, pin, opts)
@@ -42,14 +44,11 @@ defmodule UtMonitorFw.HardwareController.RelayController do
   ## HELPER METHODS ##
 
   defp pin_on(pin) do
-    send_command(pin <> ":pinon:")
+    Board.send_command("::" <> pin <> ":pinon:")
   end
 
   defp pin_off(pin) do
-    send_command(pin <> ":pinoff:")
+    Board.send_command("::" <> pin <> ":pinoff:")
   end
 
-  defp send_command(command) do
-    UtMonitorFw.Board.send_command("::" <> command)
-  end
 end

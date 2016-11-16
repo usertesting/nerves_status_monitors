@@ -2,6 +2,7 @@ defmodule UtMonitorFw.HardwareController.LedController do
   use GenServer
   require Logger
   alias UtMonitorLib.LedPixel
+  alias UtMonitorFw.Board
 
   ## PUBLIC API ##
   def start_link(display_buffer, opts \\ []) do
@@ -48,20 +49,20 @@ defmodule UtMonitorFw.HardwareController.LedController do
   ## HELPER METHODS ##
 
   defp send_command(display_buffer, command) do
-    UtMonitorFw.Board.send_command(command_prefix(display_buffer) <> command <> "continue:")
+    Board.send_command(command_prefix(display_buffer) <> command <> "continue:")
   end
 
   defp send_pixels(display_buffer, pixels) do
-    UtMonitorFw.Board.send_command(command_prefix(display_buffer))
+    Board.send_command(command_prefix(display_buffer))
     pixels |>
       Enum.chunk(5, 5, []) |>
       Enum.each(fn(pix_list) ->
         pix_list |>
           Enum.map_join(&LedPixel.to_command(&1)) |>
-          UtMonitorFw.Board.send_command
+          Board.send_command
         end
       )
-    UtMonitorFw.Board.send_command("continue:")
+    Board.send_command("continue:")
   end
 
   defp command_prefix(display_buffer) do
