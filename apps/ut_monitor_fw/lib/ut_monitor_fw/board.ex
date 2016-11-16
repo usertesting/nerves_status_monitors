@@ -16,7 +16,7 @@ defmodule UtMonitorFw.Board do
     speed = opts[:speed] || 57_600
     uart_opts = [speed: speed, active: false]
     send(self, {:start_uart, port, uart_opts})
-    {:ok, %{port: port, conn: nil}}# , buffered_commands: [], waiting_ack: true}}
+    {:ok, %{port: port, conn: nil}}
   end
 
   def handle_call({:send_command, command_str}, _from, state = %{conn: conn}) do

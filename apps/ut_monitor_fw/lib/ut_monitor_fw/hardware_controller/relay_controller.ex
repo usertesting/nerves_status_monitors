@@ -21,14 +21,22 @@ defmodule UtMonitorFw.HardwareController.RelayController do
     {:ok, %{pin: Integer.to_string(pin), state: :open}}
   end
 
-  def handle_call(:close, _from, %{pin: pin, state: state}) do
-    if state == :open, do: pin_on(pin)
+  def handle_call(:close, _from, %{pin: pin, state: :open}) do
+    pin_on(pin)
     {:reply, :ok, %{pin: pin, state: :closed}}
   end
 
-  def handle_call(:open, _from, %{pin: pin, state: state}) do
-    if state == :closed, do: pin_off(pin)
+  def handle_call(:close, _from, state = %{pin: pin, state: :closed}) do
+    {:reply, :ok, state}
+  end
+
+  def handle_call(:open, _from, %{pin: pin, state: :closed}) do
+    pin_off(pin)
     {:reply, :ok, %{pin: pin, state: :open}}
+  end
+
+  def handle_call(:open, _from, state = %{pin: pin, state: :open}) do
+    {:reply, :ok, state}
   end
 
   ## HELPER METHODS ##
