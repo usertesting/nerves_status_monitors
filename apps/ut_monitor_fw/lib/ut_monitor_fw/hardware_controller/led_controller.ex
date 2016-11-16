@@ -62,10 +62,10 @@ defmodule UtMonitorFw.HardwareController.LedController do
           Board.send_command
         end
       )
-    Board.send_command("continue:")
+    Board.send_command("0:display:flush:continue:")
   end
 
   defp command_prefix(display_buffer) do
-    "::" <> display_buffer <> ":display:pause:"
+    "::pause:" <> display_buffer <> ":display:"
   end
 end
