@@ -17,19 +17,16 @@ defmodule UtMonitorFw.HardwareController.RelayController do
   ## CALLBACKS ##
 
   def init(pin) do
-    #TODO: Send the open relay (pin low) command once Jerry adds to Arduino code
     pin_off(Integer.to_string(pin))
     {:ok, %{pin: Integer.to_string(pin), state: :open}}
   end
 
   def handle_call(:close, _from, %{pin: pin, state: state}) do
-    #TODO: Send the close relay (pin high) command once Jerry adds to Arduino code
     if state == :open, do: pin_on(pin)
     {:reply, :ok, %{pin: pin, state: :closed}}
   end
 
   def handle_call(:open, _from, %{pin: pin, state: state}) do
-    #TODO: Send the open relay (pin low) command once Jerry adds to Arduino code
     if state == :closed, do: pin_off(pin)
     {:reply, :ok, %{pin: pin, state: :open}}
   end
