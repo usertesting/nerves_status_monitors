@@ -29,7 +29,7 @@ defmodule UtMonitorFw.MonitorWorker.ApdexWorker do
         case UtMonitorLib.ServiceApis.NewRelic.get_apdex_values(app_id) do
           {:ok, apdex_values} ->
             NotificationEngine.display_data({:apdex_values, apdex_values})
-          {:error, err_msg} ->
+          {:error, _err_msg} ->
             NotificationEngine.display_data({:apdex_error})
         end
       end

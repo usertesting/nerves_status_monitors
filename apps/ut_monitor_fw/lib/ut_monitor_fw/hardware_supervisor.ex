@@ -18,16 +18,12 @@ defmodule UtMonitorFw.HardwareSupervisor do
     supervise(children, strategy: :one_for_one)
   end
 
-  defp hardware_worker(%{name: name, pin: pin, type: type}) do
-    worker(controller_for_type(type), [pin, [name: name]])
+  defp hardware_worker(%{name: name, buffer: buffer, type: :led}) do
+    worker(UtMonitorFw.HardwareController.LedController, [buffer, [name: name]], id: name)
   end
 
-  defp controller_for_type(:led) do
-    UtMonitorFw.HardwareController.LedController
-  end
-
-  defp controller_for_type(:relay) do
-    UtMonitorFw.HardwareController.RelayController
+  defp hardware_worker(%{name: name, pin: pin, type: :relay}) do
+    worker(UtMonitorFw.HardwareController.RelayController, [pin, [name: name]], id: name)
   end
 
 end
