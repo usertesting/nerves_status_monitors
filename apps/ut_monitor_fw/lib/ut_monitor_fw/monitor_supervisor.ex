@@ -12,8 +12,8 @@ defmodule UtMonitorFw.MonitorSupervisor do
 
   def init([]) do
     children = [
-      worker(UtMonitorFw.MonitorWorker.ApdexWorker, [@new_relic_orders_app_id])
-    #  worker(UtMonitorFw.MonitorWorker.HoneybadgerWorker, [@honeybadger_project_id])
+      worker(UtMonitorFw.MonitorWorker.ApdexWorker, [@new_relic_orders_app_id]),
+      worker(UtMonitorFw.MonitorWorker.HoneybadgerWorker, [@honeybadger_project_id])
     ]
 
     supervise(children, strategy: :one_for_one)

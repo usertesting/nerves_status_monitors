@@ -2,11 +2,12 @@ defmodule UtMonitorFw.HardwareController.LedController do
   use GenServer
   require Logger
   alias UtMonitorLib.LedPixel
+  alias UtMonitorFw.Board
 
   ## PUBLIC API ##
-  def start_link(pin, opts \\ []) do
-    Logger.info "Start_linking LED Controller on pin #{pin} with name #{opts[:name]}"
-    GenServer.start_link(__MODULE__, pin, opts)
+  def start_link(display_buffer, opts \\ []) do
+    Logger.info "Start_linking LED Controller on display_buffer #{display_buffer} with name #{opts[:name]}"
+    GenServer.start_link(__MODULE__, display_buffer, opts)
   end
 
   def clear_strip(pid) do
@@ -23,14 +24,15 @@ defmodule UtMonitorFw.HardwareController.LedController do
 
   ## CALLBACKS ##
 
-  def init(pin) do
-    Logger.info "Starting LED Controller on pin #{pin}"
-    send_command(pin, "reset:erase:")
-    {:ok, %{pin: pin}}
+  def init(display_buffer) do
+    Logger.info "Starting LED Controller on buffer #{display_buffer}"
+    str_buf = Integer.to_string(display_buffer)
+    send_command(str_buf, "reset:erase:")
+    {:ok, %{display_buffer: str_buf}}
   end
 
-  def handle_call(:clear, _from, state = %{pin: pin}) do
-    send_command(pin, "erase:")
+  def handle_call(:clear, _from, state = %{display_buffer: display_buffer}) do
+    send_command(display_buffer, "erase:")
     {:reply, :ok, state}
   end
 
@@ -38,28 +40,32 @@ defmodule UtMonitorFw.HardwareController.LedController do
     {:reply, :ok, state}
   end
 
-  def handle_call({:push_pixels, pixels}, _from, state = %{pin: pin}) do
+  def handle_call({:push_pixels, pixels}, _from, state = %{display_buffer: display_buffer}) do
     Logger.info("Pushing pixels: #{inspect pixels}")
-    send_pixels(pin, pixels)
+    send_pixels(display_buffer, pixels)
     {:reply, :ok, state}
   end
 
   ## HELPER METHODS ##
 
-  defp send_command(_pin, command) do
-    UtMonitorFw.Board.send_command("::pause:" <> command <> "continue:")
+  defp send_command(display_buffer, command) do
+    Board.send_command(command_prefix(display_buffer) <> command <> command_suffix)
   end
 
-  defp send_pixels(_pin, pixels) do
-    UtMonitorFw.Board.send_command("::pause:")
-    pixels |>
+  defp send_pixels(display_buffer, pixels) do
+    prefix = [command_prefix(display_buffer)]
+    pixel_commands = pixels |>
       Enum.chunk(5, 5, []) |>
-      Enum.each(fn(pix_list) ->
-        pix_list |>
-          Enum.map_join(&LedPixel.to_command(&1)) |>
-          UtMonitorFw.Board.send_command
-        end
-      )
-    UtMonitorFw.Board.send_command("continue:")
+      Enum.map(fn(pix_list) -> Enum.map_join(pix_list, &LedPixel.to_command(&1)) end)
+    suffix = [command_suffix]
+    Board.batch_commands(prefix ++ pixel_commands ++ suffix)
+  end
+
+  defp command_prefix(display_buffer) do
+    "::pause:" <> display_buffer <> ":display:"
+  end
+
+  defp command_suffix do
+    "0:display:flush:continue:"
   end
 end

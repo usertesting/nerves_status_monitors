@@ -31,7 +31,7 @@ defmodule UtMonitorFw.HardwareDispatcher do
     {:reply, :ok, state}
   end
 
-  def handle_call({:set_relay, relay_id, :close}, _from, state = %{known_devices: known_devices}) do
+  def handle_call({:set_relay, relay_id, :closed}, _from, state = %{known_devices: known_devices}) do
     if MapSet.member?(known_devices, relay_id) do
       RelayController.close_relay(relay_id)
     end

@@ -1,6 +1,8 @@
 defmodule UtMonitorFw.HardwareController.RelayController do
   use GenServer
 
+  alias UtMonitorFw.Board
+
   ## PUBLIC API ##
   def start_link(pin, opts \\ []) do
     GenServer.start_link(__MODULE__, pin, opts)
@@ -17,26 +19,36 @@ defmodule UtMonitorFw.HardwareController.RelayController do
   ## CALLBACKS ##
 
   def init(pin) do
-    #TODO: Send the open relay (pin low) command once Jerry adds to Arduino code
-    send_command(pin, "TBD")
-    {:ok, %{pin: pin, state: :open}}
+    pin_off(Integer.to_string(pin))
+    {:ok, %{pin: Integer.to_string(pin), state: :open}}
   end
 
-  def handle_call(:close, _from, %{pin: pin, state: state}) do
-    #TODO: Send the close relay (pin high) command once Jerry adds to Arduino code
-    if state == :open, do: send_command(pin, "TBD")
-    {:reply, :ok, %{pin: pin, state: :closed}}
+  def handle_call(:close, _from, state = %{pin: pin, state: :open}) do
+    pin_on(pin)
+    {:reply, :ok, %{state | state: :closed}}
   end
 
-  def handle_call(:open, _from, %{pin: pin, state: state}) do
-    #TODO: Send the open relay (pin low) command once Jerry adds to Arduino code
-    if state == :closed, do: send_command(pin, "TBD")
-    {:reply, :ok, %{pin: pin, state: :open}}
+  def handle_call(:close, _from, state = %{state: :closed}) do
+    {:reply, :ok, state}
+  end
+
+  def handle_call(:open, _from, state = %{pin: pin, state: :closed}) do
+    pin_off(pin)
+    {:reply, :ok, %{state | state: :open}}
+  end
+
+  def handle_call(:open, _from, state = %{state: :open}) do
+    {:reply, :ok, state}
   end
 
   ## HELPER METHODS ##
 
-  defp send_command(_pin, command) do
-    UtMonitorFw.Board.send_command("::" <> command)
+  defp pin_on(pin) do
+    Board.send_command("::" <> pin <> ":pinon:")
   end
+
+  defp pin_off(pin) do
+    Board.send_command("::" <> pin <> ":pinoff:")
+  end
+
 end
