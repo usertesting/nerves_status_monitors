@@ -68,7 +68,7 @@ defmodule UtMonitorFw.NotificationEngine do
     {:reply, :ok, state}
   end
 
-  def handle_call({:pingdom_error, :site_down, check_id}, _from, state) do
+  def handle_call({:pingdom_error, check_id}, _from, state) do
     Logger.info("Error Retrieving Pingdom Details: Check " <> inspect(check_id))
     {:reply, :ok, state}
   end
