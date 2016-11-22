@@ -11,7 +11,8 @@ config :logger,
 config :ut_monitor_fw, :hardware_spec,
   [
     %{name: :apdex_leds, buffer: 0, type: :led},
-    %{name: :hb_leds, buffer: 1, type: :led}
+    %{name: :hb_leds, buffer: 1, type: :led},
+    %{name: :pingdom_relay, pin: 4, type: :relay}
   ]
 # Import target specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

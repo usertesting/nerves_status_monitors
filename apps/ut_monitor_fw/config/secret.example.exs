@@ -10,6 +10,12 @@ config :ut_monitor_lib, :honeybadger, %{
     project_id: "your_honeybadger_project_id"
 }
 
+config :ut_monitor_lib, :pingdom, %{
+  user_name: "your_pingdom_username",
+  password: "your_pingdom_password",
+  application_id: "your_pingdom_app_id"
+}
+
 config :ut_monitor_fw, :wlan0,
   ssid: "Your Network Name",
   key_mgmt: :"WPA-PSK",

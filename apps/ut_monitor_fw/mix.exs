@@ -31,7 +31,8 @@ defmodule UtMonitorFw.Mixfile do
       {:nerves_ntp, "~> 0.1"},
       {:ut_monitor_lib, in_umbrella: true},
       {:nerves_uart, "~> 0.1.1"},
-      {:credo, "~> 0.4", only: [:dev, :test]}
+      {:credo, "~> 0.4", only: [:dev, :test]},
+      {:apex, "~>0.6.0"}
     ]
   end
 

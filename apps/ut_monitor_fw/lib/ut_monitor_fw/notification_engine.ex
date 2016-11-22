@@ -6,6 +6,8 @@ defmodule UtMonitorFw.NotificationEngine do
   alias UtMonitorLib.LedPixel
   alias UtMonitorFw.HardwareDispatcher
 
+  @main_page_check Application.get_env(:ut_monitor_lib, :pingdom).main_page_check
+
   def start_link do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
@@ -44,4 +46,30 @@ defmodule UtMonitorFw.NotificationEngine do
     {:reply, :ok, state}
   end
 
+  def handle_call({:pingdom, :site_down, @main_page_check}, _from, state) do
+    Logger.info("Main Site Down")
+    HardwareDispatcher.set_relay(:pingdom_relay, :closed)
+    {:reply, :ok, state}
+  end
+
+  def handle_call({:pingdom, :site_down, check_id}, _from, state) do
+    Logger.info("Pingdom Down Alert: Check " <> inspect(check_id))
+    {:reply, :ok, state}
+  end
+
+  def handle_call({:pingdom, :site_up, @main_page_check}, _from, state) do
+    Logger.info("Main Site Up")
+    HardwareDispatcher.set_relay(:pingdom_relay, :open)
+    {:reply, :ok, state}
+  end
+
+  def handle_call({:pingdom, :site_up, check_id}, _from, state) do
+    Logger.info("Pingdom Down Alert: Check " <> inspect(check_id))
+    {:reply, :ok, state}
+  end
+
+  def handle_call({:pingdom_error, :site_down, check_id}, _from, state) do
+    Logger.info("Error Retrieving Pingdom Details: Check " <> inspect(check_id))
+    {:reply, :ok, state}
+  end
 end
