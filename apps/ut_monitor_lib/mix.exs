@@ -31,7 +31,8 @@ defmodule UtMonitorLib.Mixfile do
       {:tesla, "~> 0.5.0"},
       {:poison, ">= 1.0.0"},
       {:timex, "~> 3.0"},
-      {:credo, "~> 0.4", only: [:dev, :test]}
+      {:credo, "~> 0.4", only: [:dev, :test]},
+      {:apex, "~>0.6.0"}
     ]
   end
 end
