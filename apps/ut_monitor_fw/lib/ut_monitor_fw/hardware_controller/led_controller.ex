@@ -66,6 +66,6 @@ defmodule UtMonitorFw.HardwareController.LedController do
   end
 
   defp command_suffix do
-    "0:display:flush:continue:"
+    "flush:0:display:continue:"
   end
 end

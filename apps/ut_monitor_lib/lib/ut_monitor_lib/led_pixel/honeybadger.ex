@@ -5,7 +5,7 @@ defmodule UtMonitorLib.LedPixel.Honeybadger do
   def pixel_strip(minute_data, hour_data) do
     hour_pixels = aged_pixels_from_hour_list(hour_data |> Enum.slice(14,10))
     minute_pixels = aged_pixels_from_minute_list(minute_data)
-    List.flatten([hour_pixels, LedPixel.black_pixel, LedPixel.black_pixel, minute_pixels])
+    List.flatten([hour_pixels, LedPixel.black_pixel(2), minute_pixels])
   end
 
   @minute_rate_log_base 3

@@ -4,7 +4,7 @@ defmodule UtMonitorFw.MonitorWorker.ApdexWorker do
 
   alias UtMonitorFw.NotificationEngine
 
-  @polling_interval 60 * 1000 # 5 minutes in milliseconds
+  @polling_interval 60 * 1000 # 1 minutes in milliseconds
 
   def start_link(app_id, opts \\ []) do
     GenServer.start_link(__MODULE__, app_id, opts)
@@ -17,9 +17,8 @@ defmodule UtMonitorFw.MonitorWorker.ApdexWorker do
 
   def handle_info(:wait_for_wifi, state) do
     case Nerves.NetworkInterface.status("wlan0") do
-      {:error, :unknown} -> Process.send_after(self, :wait_for_wifi, 1000)
       {:ok, %{is_up: true}} -> Process.send_after(self, :refresh, 1000)
-      {:ok, _} -> Process.send_after(self, :wait_for_wifi, 1000)
+      _ -> Process.send_after(self, :wait_for_wifi, 1000)
     end
     {:noreply, state}
   end

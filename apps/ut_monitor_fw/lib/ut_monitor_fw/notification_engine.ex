@@ -24,7 +24,7 @@ defmodule UtMonitorFw.NotificationEngine do
 
   def handle_call({:apdex_error}, _from, state) do
     Logger.info("Notification Engine Received :apdex_error")
-    HardwareDispatcher.push_pixels(:apdex_leds, [%LedPixel{h: 240, effect: "breathe"}])
+    HardwareDispatcher.push_pixels(:apdex_leds, [LedPixel.error_pixel])
     {:reply, :ok, state}
   end
 
@@ -36,7 +36,7 @@ defmodule UtMonitorFw.NotificationEngine do
 
   def handle_call({:honeybadger_error}, _from, state) do
     Logger.info("Notification Engine Received :honeybadger_error")
-    HardwareDispatcher.push_pixels(:hb_leds, [%LedPixel{h: 240, effect: "breathe"}])
+    HardwareDispatcher.push_pixels(:hb_leds, [LedPixel.error_pixel])
     {:reply, :ok, state}
   end
 
@@ -72,4 +72,17 @@ defmodule UtMonitorFw.NotificationEngine do
     Logger.info("Error Retrieving Pingdom Details: Check " <> inspect(check_id))
     {:reply, :ok, state}
   end
+  
+  def handle_call({:build_data, builds}, _from, state) do
+    Logger.info("Got build data: " <> inspect(builds))
+    HardwareDispatcher.push_pixels(:circle_leds, LedPixel.CircleCi.aged_pixels_from_build_list(builds))
+    {:reply, :ok, state}
+  end
+  
+  def handle_call({:circle_ci_error}, _from, state) do
+    Logger.info("Error fetching CircleCI data")
+    HardwareDispatcher.push_pixels(:circle_leds, LedPixel.CircleCi.error_pixels)
+    {:reply, :ok, state}
+  end
+  
 end
