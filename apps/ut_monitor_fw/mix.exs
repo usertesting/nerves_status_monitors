@@ -32,7 +32,7 @@ defmodule UtMonitorFw.Mixfile do
       {:ut_monitor_lib, in_umbrella: true},
       {:nerves_uart, "~> 0.1.1"},
       {:credo, "~> 0.4", only: [:dev, :test]},
-      {:apex, "~>0.6.0"}
+      {:apex, "~>0.7.0"}
     ]
   end
 

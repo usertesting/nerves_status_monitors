@@ -13,14 +13,14 @@ defmodule UtMonitorLib.ServiceApis.CircleCiClient do
   end
 
   def get_project_builds(project_spec) do
-    get(CircleCiProjectSpec.to_url(project_spec), query: base_query_params)
+    get(CircleCiProjectSpec.to_url(project_spec), query: base_query_params(project_spec.builds))
   end
 
-  defp base_query_params do
+  defp base_query_params(limit \\ 18) do
     [
       {:"circle-token", Application.get_env(:ut_monitor_lib, :circle_ci).token},
       offset: 0,
-      limit: 18
+      limit: limit
     ]
   end
 end

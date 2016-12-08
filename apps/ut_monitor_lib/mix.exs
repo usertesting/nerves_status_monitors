@@ -32,7 +32,7 @@ defmodule UtMonitorLib.Mixfile do
       {:poison, ">= 1.0.0"},
       {:timex, "~> 3.0"},
       {:credo, "~> 0.4", only: [:dev, :test]},
-      {:apex, "~>0.6.0"}
+      {:apex, "~>0.7.0"}
     ]
   end
 end

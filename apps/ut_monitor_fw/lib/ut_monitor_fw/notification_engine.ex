@@ -72,17 +72,17 @@ defmodule UtMonitorFw.NotificationEngine do
     Logger.info("Error Retrieving Pingdom Details: Check " <> inspect(check_id))
     {:reply, :ok, state}
   end
-  
+
   def handle_call({:build_data, builds}, _from, state) do
     Logger.info("Got build data: " <> inspect(builds))
     HardwareDispatcher.push_pixels(:circle_leds, LedPixel.CircleCi.aged_pixels_from_build_list(builds))
     {:reply, :ok, state}
   end
-  
+
   def handle_call({:circle_ci_error}, _from, state) do
     Logger.info("Error fetching CircleCI data")
     HardwareDispatcher.push_pixels(:circle_leds, LedPixel.CircleCi.error_pixels)
     {:reply, :ok, state}
   end
-  
+
 end

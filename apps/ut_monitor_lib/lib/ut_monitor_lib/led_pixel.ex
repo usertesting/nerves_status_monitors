@@ -1,7 +1,7 @@
 defmodule UtMonitorLib.LedPixel do
   alias UtMonitorLib.LedPixel
 
-  defstruct h: 0, s: 255, l: 64, effect: nil, repeat: 1
+  defstruct h: 0, s: 255, l: 64, effect: nil, repeat: 0
 
   def to_command(%LedPixel{h: _, s: _, l: 0, effect: _, repeat: repeat}) do
     "black:" <> repeat_str(repeat)
@@ -11,11 +11,11 @@ defmodule UtMonitorLib.LedPixel do
     "#{h},#{s},#{l}:hslcolor:" <> effect_str(effect) <> repeat_str(repeat)
   end
 
-  def black_pixel(repeat \\ 1) do
+  def black_pixel(repeat \\ 0) do
     %LedPixel{l: 0, repeat: repeat}
   end
   
-  def error_pixel(repeat \\ 1) do
+  def error_pixel(repeat \\ 0) do
     %LedPixel{h: 240, effect: "breathe", repeat: repeat}
   end
   
@@ -28,7 +28,7 @@ defmodule UtMonitorLib.LedPixel do
     "#{effect}:"
   end
 
-  defp repeat_str(1) do
+  defp repeat_str(0) do
     ""
   end
   

@@ -2,20 +2,25 @@ defmodule UtMonitorLib.ServiceApis.CircleCi do
   @moduledoc false
 
   def get_all_builds(client \\ UtMonitorLib.ServiceApis.CircleCiClient) do
-    case client.get_all_builds do
-      %Tesla.Env{body: build_list, status: 200} ->
-        {:ok, Enum.map(build_list, &build_status_tuple(&1))}
-      _ ->
-        {:error}
-    end
+    make_call(fn -> client.get_all_builds end)
   end
 
   def get_project_builds(project_spec, client \\ UtMonitorLib.ServiceApis.CircleCiClient) do
-    case client.get_project_builds(project_spec) do
-      %Tesla.Env{body: build_list, status: 200} ->
-        {:ok, Enum.map(build_list, &build_status_tuple(&1))}
-      _ ->
-        {:error}
+    make_call(fn -> client.get_project_builds(project_spec) end)
+  end
+
+  defp make_call(call_fn) do
+    try do
+      case call_fn.() do
+        %Tesla.Env{body: build_list, status: 200} ->
+          {:ok, Enum.map(build_list, &build_status_tuple(&1))}
+        %Tesla.Env{body: body} ->
+          {:error, body}
+        _ ->
+          {:error, "Unknown Error"}
+      end
+    rescue
+      Tesla.Error -> {:error, "Tesla Error"}
     end
   end
 
@@ -25,8 +30,7 @@ defmodule UtMonitorLib.ServiceApis.CircleCi do
     lifecycle = Map.get(build_map, "lifecycle")
     status = Map.get(build_map, "status")
     outcome = Map.get(build_map, "outcome")
-    {:ok, commit_time} = Map.get(build_map, "committer_date") |> Timex.parse("{ISO:Extended:Z}")
-    {repo, branch, build_status(lifecycle, status, outcome), commit_time}
+    {repo, branch, build_status(lifecycle, status, outcome)}
   end
 
   defp build_status(lifecycle, status, outcome) do

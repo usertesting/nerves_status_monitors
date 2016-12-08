@@ -1,13 +1,17 @@
 defmodule UtMonitorLib.ServiceApis.Honeybadger do
 
   def get_error_rates(project_id, buckets, client \\ UtMonitorLib.ServiceApis.HoneybadgerClient) do
-    case client.get_error_rates(project_id, buckets) do
-      %Tesla.Env{body: body, status: 200} ->
-        {:ok, parse_error_rates(body)}
-      %Tesla.Env{body: body} ->
-        {:error, body}
-      _ ->
-        {:error, "Unknown Error"}
+    try do
+      case client.get_error_rates(project_id, buckets) do
+        %Tesla.Env{body: body, status: 200} ->
+          {:ok, parse_error_rates(body)}
+        %Tesla.Env{body: body} ->
+          {:error, body}
+        _ ->
+          {:error, "Unknown Error"}
+      end
+    rescue
+      Tesla.Error -> {:error, "Tesla Error"}
     end
   end
 

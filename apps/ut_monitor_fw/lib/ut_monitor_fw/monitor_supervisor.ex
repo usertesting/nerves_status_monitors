@@ -18,8 +18,8 @@ defmodule UtMonitorFw.MonitorSupervisor do
       worker(UtMonitorFw.MonitorWorker.HoneybadgerWorker, [@honeybadger_project_id]),
       worker(UtMonitorFw.MonitorWorker.PingdomWorker, [@pingdom_check_id]),
       worker(UtMonitorFw.MonitorWorker.CircleCiWorker,[[
-        %CircleCiProjectSpec{project: "orders", branch: "master"},
-        %CircleCiProjectSpec{project: "uploader", branch: "master"},
+        %CircleCiProjectSpec{project: "orders", branch: "master", builds: 12},
+        %CircleCiProjectSpec{project: "uploader", branch: "master", builds: 6},
       ]])
     ]
 

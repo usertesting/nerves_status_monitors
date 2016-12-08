@@ -27,21 +27,15 @@ defmodule UtMonitorFw.MonitorWorker.CircleCiWorker do
   end
 
   def handle_info(:refresh, state = %{project_list: project_list}) do
-    tasks = Enum.map(project_list, &Task.async(fn -> get_project_info(&1) end)
-    builds = tasks |> Enum.map(&Task.await(&1, 10000))
-    IO.inspect builds 
+    builds = Enum.map(project_list, &get_project_info(&1)) 
     if Enum.any?(builds, &(&1 == :error)) do
       NotificationEngine.display_data({:circle_ci_error})
     else
-      builds = builds |> List.flatten |> sort_builds |> Enum.take(18)
+      builds = builds |> List.flatten |> Enum.take(18)
       NotificationEngine.display_data({:build_data, builds})
     end   
     Process.send_after(self, :refresh, @polling_interval)
     {:noreply, state}
-  end
-
-  defp sort_builds(builds) do
-    builds |> Enum.sort(&(elem(&1,3) < elem(&2, 3)))
   end
 
   defp get_project_info(project_spec) do

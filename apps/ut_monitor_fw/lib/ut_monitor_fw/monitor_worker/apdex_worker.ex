@@ -24,15 +24,12 @@ defmodule UtMonitorFw.MonitorWorker.ApdexWorker do
   end
 
   def handle_info(:refresh, state = %{app_id: app_id}) do
-    Task.start_link(fn ->
-        case UtMonitorLib.ServiceApis.NewRelic.get_apdex_values(app_id) do
-          {:ok, apdex_values} ->
-            NotificationEngine.display_data({:apdex_values, apdex_values})
-          {:error, _err_msg} ->
-            NotificationEngine.display_data({:apdex_error})
-        end
-      end
-    )
+    case UtMonitorLib.ServiceApis.NewRelic.get_apdex_values(app_id) do
+      {:ok, apdex_values} ->
+        NotificationEngine.display_data({:apdex_values, apdex_values})
+      {:error, _err_msg} ->
+        NotificationEngine.display_data({:apdex_error})
+    end
     Process.send_after(self, :refresh, @polling_interval)
     {:noreply, state}
   end

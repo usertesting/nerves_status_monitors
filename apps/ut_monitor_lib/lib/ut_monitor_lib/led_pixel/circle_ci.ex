@@ -5,10 +5,7 @@ defmodule UtMonitorLib.LedPixel.CircleCi do
   @steps 18
 
   def aged_pixels_from_build_list(build_tuples) do
-    #Oldest apdex comes first, so we want to reverse it so that oldest get the biggest ages
-    #Then we need to reverse it again, so that the LED for the oldest apdex value is furthest down the strip
     build_tuples |>
-      Enum.reverse |>
       Enum.with_index |>
       Enum.map(fn({build_tuple, age}) -> from_build_tuple(build_tuple, age) end) |>
       List.flatten |>
@@ -18,18 +15,18 @@ defmodule UtMonitorLib.LedPixel.CircleCi do
   @error_hue 0 
   def error_pixels do
     [
-      %LedPixel{h: @error_hue, s: 255, effect: :blink, repeat: 3 },
+      %LedPixel{h: @error_hue, s: 255, effect: :blink, repeat: 2 },
       LedPixel.black_pixel
     ]
   end
 
-  defp from_build_tuple({repo, _branch, status, _time}, age) do
+  defp from_build_tuple({repo, _branch, status}, age) do
     lightness = LedPixel.age_to_lightness(age, @steps)
     effect = build_effect(status)
     hue = build_hue(status)
     [
       %LedPixel{h: project_hue(repo), s: 255, l: lightness, effect: effect},
-      %LedPixel{h: hue, s: 255, l: lightness, effect: effect, repeat: 2},
+      %LedPixel{h: hue, s: 255, l: lightness, effect: effect, repeat: 1},
       LedPixel.black_pixel
     ]
   end

@@ -1,15 +1,19 @@
 defmodule UtMonitorLib.ServiceApis.NewRelic do
 
   def get_apdex_values(app_id, client \\ UtMonitorLib.ServiceApis.NewRelicClient) do
-    case client.get_apdex_data(app_id) do
-      :badtime ->
-        {:error, "Clock not set."}
-      %Tesla.Env{body: body, status: 200} ->
-        {:ok, parse_apdex_values(body)}
-      %Tesla.Env{body: body} ->
-        {:error, body}
-      _ ->
-        {:error, "Unknown Error"}
+    try do
+      case client.get_apdex_data(app_id) do
+        :badtime ->
+          {:error, "Clock not set."}
+        %Tesla.Env{body: body, status: 200} ->
+          {:ok, parse_apdex_values(body)}
+        %Tesla.Env{body: body} ->
+          {:error, body}
+        _ ->
+          {:error, "Unknown Error"}
+      end
+    rescue
+      Tesla.Error -> {:error, "Tesla Error"}
     end
   end
 
