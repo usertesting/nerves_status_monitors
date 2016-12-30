@@ -13,7 +13,7 @@ defmodule UtMonitorFw do
     # Define workers and child supervisors to be supervised
     children = [
       worker(Task, [fn -> network end], restart: :transient),
-      worker(UtMonitorFw.Board, [@arduino_tty, %{speed: @arduino_baud}]),
+      worker(UtMonitorLib.Board, [@arduino_tty, %{speed: @arduino_baud}]),
       worker(UtMonitorFw.NotificationEngine, []),
       supervisor(UtMonitorFw.MonitorSupervisor, []),
       supervisor(UtMonitorFw.HardwareSupervisor, [Application.get_env(:ut_monitor_fw, :hardware_spec)])

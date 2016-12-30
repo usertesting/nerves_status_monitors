@@ -1,7 +1,7 @@
 defmodule UtMonitorFw.HardwareController.RelayController do
   use GenServer
 
-  alias UtMonitorFw.Board
+  alias UtMonitorLib.Board
 
   ## PUBLIC API ##
   def start_link(pin, opts \\ []) do

@@ -2,7 +2,7 @@ defmodule UtMonitorFw.HardwareController.LedController do
   use GenServer
   require Logger
   alias UtMonitorLib.LedPixel
-  alias UtMonitorFw.Board
+  alias UtMonitorLib.Board
 
   ## PUBLIC API ##
   def start_link(display_buffer, opts \\ []) do
