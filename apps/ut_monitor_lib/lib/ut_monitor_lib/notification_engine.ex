@@ -1,10 +1,10 @@
-defmodule UtMonitorFw.NotificationEngine do
+defmodule UtMonitorLib.NotificationEngine do
   @moduledoc false
   require Logger
   use GenServer
 
   alias UtMonitorLib.LedPixel
-  alias UtMonitorFw.HardwareDispatcher
+  alias UtMonitorLib.HardwareDispatcher
 
   @main_page_check Application.get_env(:ut_monitor_lib, :pingdom).main_page_check
 

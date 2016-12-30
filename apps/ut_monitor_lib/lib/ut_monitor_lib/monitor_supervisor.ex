@@ -1,4 +1,4 @@
-defmodule UtMonitorFw.MonitorSupervisor do
+defmodule UtMonitorLib.MonitorSupervisor do
   @moduledoc false
 
   use Supervisor
@@ -14,10 +14,10 @@ defmodule UtMonitorFw.MonitorSupervisor do
 
   def init([]) do
     children = [
-      worker(UtMonitorFw.MonitorWorker.ApdexWorker, [@new_relic_orders_app_id]),
-      worker(UtMonitorFw.MonitorWorker.HoneybadgerWorker, [@honeybadger_project_id]),
-      worker(UtMonitorFw.MonitorWorker.PingdomWorker, [@pingdom_check_id]),
-      worker(UtMonitorFw.MonitorWorker.CircleCiWorker,[[
+      worker(UtMonitorLib.MonitorWorker.ApdexWorker, [@new_relic_orders_app_id]),
+      worker(UtMonitorLib.MonitorWorker.HoneybadgerWorker, [@honeybadger_project_id]),
+      worker(UtMonitorLib.MonitorWorker.PingdomWorker, [@pingdom_check_id]),
+      worker(UtMonitorLib.MonitorWorker.CircleCiWorker,[[
         %CircleCiProjectSpec{project: "orders", branch: "master", builds: 12},
         %CircleCiProjectSpec{project: "uploader", branch: "master", builds: 6},
       ]])

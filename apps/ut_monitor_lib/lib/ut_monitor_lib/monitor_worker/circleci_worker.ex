@@ -1,8 +1,8 @@
-defmodule UtMonitorFw.MonitorWorker.CircleCiWorker do
+defmodule UtMonitorLib.MonitorWorker.CircleCiWorker do
   use GenServer
   require Logger
 
-  alias UtMonitorFw.NotificationEngine
+  alias UtMonitorLib.NotificationEngine
 
   @polling_interval 60 * 1000 # 1 minutes in milliseconds
 
@@ -27,13 +27,13 @@ defmodule UtMonitorFw.MonitorWorker.CircleCiWorker do
   end
 
   def handle_info(:refresh, state = %{project_list: project_list}) do
-    builds = Enum.map(project_list, &get_project_info(&1)) 
+    builds = Enum.map(project_list, &get_project_info(&1))
     if Enum.any?(builds, &(&1 == :error)) do
       NotificationEngine.display_data({:circle_ci_error})
     else
       builds = builds |> List.flatten |> Enum.take(18)
       NotificationEngine.display_data({:build_data, builds})
-    end   
+    end
     Process.send_after(self, :refresh, @polling_interval)
     {:noreply, state}
   end

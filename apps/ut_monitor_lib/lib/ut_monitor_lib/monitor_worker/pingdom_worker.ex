@@ -1,8 +1,8 @@
-defmodule UtMonitorFw.MonitorWorker.PingdomWorker do
+defmodule UtMonitorLib.MonitorWorker.PingdomWorker do
   use GenServer
   require Logger
 
-  alias UtMonitorFw.NotificationEngine
+  alias UtMonitorLib.NotificationEngine
 
   @polling_interval 60 * 1000 # every minute in milliseconds
 

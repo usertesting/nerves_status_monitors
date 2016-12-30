@@ -1,8 +1,8 @@
-defmodule UtMonitorFw.MonitorWorker.HoneybadgerWorker do
+defmodule UtMonitorLib.MonitorWorker.HoneybadgerWorker do
   use GenServer
   require Logger
 
-  alias UtMonitorFw.NotificationEngine
+  alias UtMonitorLib.NotificationEngine
 
   @polling_interval 60 * 1000 # 1 minutes in milliseconds
 
