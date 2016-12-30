@@ -1,10 +1,10 @@
-defmodule UtMonitorFw.HardwareDispatcher do
+defmodule UtMonitorLib.HardwareDispatcher do
   @moduledoc false
   require Logger
   use GenServer
 
-  alias UtMonitorFw.HardwareController.LedController
-  alias UtMonitorFw.HardwareController.RelayController
+  alias UtMonitorLib.HardwareController.LedController
+  alias UtMonitorLib.HardwareController.RelayController
 
   def start_link(known_devices) do
     GenServer.start_link(__MODULE__, [known_devices], [name: __MODULE__])

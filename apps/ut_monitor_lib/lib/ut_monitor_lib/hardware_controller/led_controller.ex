@@ -1,4 +1,4 @@
-defmodule UtMonitorFw.HardwareController.LedController do
+defmodule UtMonitorLib.HardwareController.LedController do
   use GenServer
   require Logger
   alias UtMonitorLib.LedPixel

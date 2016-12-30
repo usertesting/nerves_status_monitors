@@ -1,4 +1,4 @@
-defmodule UtMonitorFw.HardwareController.RelayController do
+defmodule UtMonitorLib.HardwareController.RelayController do
   use GenServer
 
   alias UtMonitorLib.Board

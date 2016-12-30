@@ -1,4 +1,4 @@
-defmodule UtMonitorFw.HardwareSupervisor do
+defmodule UtMonitorLib.HardwareSupervisor do
   @moduledoc false
   require Logger
   use Supervisor
@@ -11,7 +11,7 @@ defmodule UtMonitorFw.HardwareSupervisor do
     Logger.info "Starting Hardware Supervisor"
 
     children = [
-      worker(UtMonitorFw.HardwareDispatcher, [Enum.map(hardware_config, &(&1.name))]) |
+      worker(UtMonitorLib.HardwareDispatcher, [Enum.map(hardware_config, &(&1.name))]) |
       Enum.map(hardware_config, &(hardware_worker(&1)))
     ]
 
@@ -19,11 +19,11 @@ defmodule UtMonitorFw.HardwareSupervisor do
   end
 
   defp hardware_worker(%{name: name, buffer: buffer, type: :led}) do
-    worker(UtMonitorFw.HardwareController.LedController, [buffer, [name: name]], id: name)
+    worker(UtMonitorLib.HardwareController.LedController, [buffer, [name: name]], id: name)
   end
 
   defp hardware_worker(%{name: name, pin: pin, type: :relay}) do
-    worker(UtMonitorFw.HardwareController.RelayController, [pin, [name: name]], id: name)
+    worker(UtMonitorLib.HardwareController.RelayController, [pin, [name: name]], id: name)
   end
 
 end
