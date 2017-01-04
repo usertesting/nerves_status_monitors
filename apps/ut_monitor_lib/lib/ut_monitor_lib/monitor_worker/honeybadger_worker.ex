@@ -17,7 +17,7 @@ defmodule UtMonitorLib.MonitorWorker.HoneybadgerWorker do
 
   def handle_info(:wait_for_wifi, state) do
     case Nerves.NetworkInterface.status("wlan0") do
-      {:ok, %{is_up: true}} -> Process.send_after(self, :refresh, 1000)
+      {:ok, %{is_up: true}} -> send(self, :refresh)
       _ -> Process.send_after(self, :wait_for_wifi, 1000)
     end
     {:noreply, state}

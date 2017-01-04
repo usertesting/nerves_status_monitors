@@ -17,38 +17,32 @@ defmodule UtMonitorLib.MonitorWorker.PingdomWorker do
 
   def handle_info(:wait_for_wifi, state) do
     case Nerves.NetworkInterface.status("wlan0") do
-      {:ok, %{is_up: true}} -> Process.send_after(self, :refresh, 1000)
+      {:ok, %{is_up: true}} -> send(self, :refresh)
       _ -> Process.send_after(self, :wait_for_wifi, 1000)
     end
     {:noreply, state}
   end
 
   def handle_info(:refresh, state = %{check_id: check_id, status: :up}) do
-    Task.start_link(fn ->
-        case UtMonitorLib.ServiceApis.Pingdom.get_site_status(check_id) do
-          {:ok, :down} ->
-            NotificationEngine.display_data({:pingdom, :site_down, check_id})
-          {:error, _err_msg} ->
-            NotificationEngine.display_data({:pingdom_error, check_id})
-          _ -> true
-        end
-      end
-    )
+    case UtMonitorLib.ServiceApis.Pingdom.get_site_status(check_id) do
+      {:ok, :down} ->
+        NotificationEngine.display_data({:pingdom, :site_down, check_id})
+      {:error, _err_msg} ->
+        NotificationEngine.display_data({:pingdom_error, check_id})
+      _ -> true
+    end
     Process.send_after(self, :refresh, @polling_interval)
     {:noreply, %{state | status: :down}}
   end
 
   def handle_info(:refresh, state = %{check_id: check_id, status: :down}) do
-    Task.start_link(fn ->
-        case UtMonitorLib.ServiceApis.Pingdom.get_site_status(check_id) do
-          {:ok, :up} ->
-            NotificationEngine.display_data({:pingdom, :site_up, check_id})
-          {:error, _err_msg} ->
-            NotificationEngine.display_data({:pingdom_error, check_id})
-          _ -> true
-        end
-      end
-    )
+    case UtMonitorLib.ServiceApis.Pingdom.get_site_status(check_id) do
+      {:ok, :up} ->
+        NotificationEngine.display_data({:pingdom, :site_up, check_id})
+      {:error, _err_msg} ->
+        NotificationEngine.display_data({:pingdom_error, check_id})
+      _ -> true
+    end
     Process.send_after(self, :refresh, @polling_interval)
     {:noreply, %{state | status: :up}}
   end
