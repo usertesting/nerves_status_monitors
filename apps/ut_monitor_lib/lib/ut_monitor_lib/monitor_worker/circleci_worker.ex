@@ -14,14 +14,14 @@ defmodule UtMonitorLib.MonitorWorker.CircleCiWorker do
   ## CALLBACKS  ##
 
   def init(project_list) do
-    send(self, :wait_for_wifi)
+    send(self(), :wait_for_wifi)
     {:ok, %{project_list: project_list}}
   end
 
   def handle_info(:wait_for_wifi, state) do
     case Nerves.NetworkInterface.status("wlan0") do
-      {:ok, %{is_up: true}} -> send(self, :refresh)
-      _ -> Process.send_after(self, :wait_for_wifi, 1000)
+      {:ok, %{is_up: true}} -> send(self(), :refresh)
+      _ -> Process.send_after(self(), :wait_for_wifi, 1000)
     end
     {:noreply, state}
   end
@@ -34,7 +34,7 @@ defmodule UtMonitorLib.MonitorWorker.CircleCiWorker do
       builds = builds |> List.flatten |> Enum.take(18)
       NotificationEngine.display_data({:build_data, builds})
     end
-    Process.send_after(self, :refresh, @polling_interval)
+    Process.send_after(self(), :refresh, @polling_interval)
     {:noreply, state}
   end
 

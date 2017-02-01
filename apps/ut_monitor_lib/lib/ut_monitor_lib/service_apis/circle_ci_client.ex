@@ -9,7 +9,7 @@ defmodule UtMonitorLib.ServiceApis.CircleCiClient do
   alias UtMonitorLib.CircleCiProjectSpec
 
   def get_all_builds do
-    get("recent-builds", query: base_query_params)
+    get("recent-builds", query: base_query_params())
   end
 
   def get_project_builds(project_spec) do

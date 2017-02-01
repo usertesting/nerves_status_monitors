@@ -19,7 +19,7 @@ defmodule UtMonitorLib.Board do
   def init({port, opts}) do
     speed = opts[:speed] || 57_600
     uart_opts = [speed: speed, active: false]
-    send(self, {:start_uart, port, uart_opts})
+    send(self(), {:start_uart, port, uart_opts})
     {:ok, %{port: port, conn: nil}}
   end
 

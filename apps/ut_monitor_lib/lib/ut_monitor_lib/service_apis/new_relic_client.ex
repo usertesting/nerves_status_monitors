@@ -8,7 +8,7 @@ defmodule UtMonitorLib.ServiceApis.NewRelicClient do
   plug Tesla.Middleware.Headers, %{"X-Api-Key" => Application.get_env(:ut_monitor_lib, :new_relic).api_key}
   plug Tesla.Middleware.JSON
 
-  def get_apdex_data(app_id, num_slices \\ 72) do
+  def get_apdex_data(app_id, num_slices \\ @apdex_numslices) do
     now = Timex.now
     if now.year < 2016 do
       :bad_time

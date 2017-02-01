@@ -11,14 +11,14 @@ defmodule UtMonitorLib.MonitorWorker.PingdomWorker do
   end
 
   def init(check_id) do
-    send(self, :wait_for_wifi)
+    send(self(), :wait_for_wifi)
     {:ok, %{check_id: check_id, status: :up}}
   end
 
   def handle_info(:wait_for_wifi, state) do
     case Nerves.NetworkInterface.status("wlan0") do
-      {:ok, %{is_up: true}} -> send(self, :refresh)
-      _ -> Process.send_after(self, :wait_for_wifi, 1000)
+      {:ok, %{is_up: true}} -> send(self(), :refresh)
+      _ -> Process.send_after(self(), :wait_for_wifi, 1000)
     end
     {:noreply, state}
   end
@@ -31,7 +31,7 @@ defmodule UtMonitorLib.MonitorWorker.PingdomWorker do
         NotificationEngine.display_data({:pingdom_error, check_id})
       _ -> true
     end
-    Process.send_after(self, :refresh, @polling_interval)
+    Process.send_after(self(), :refresh, @polling_interval)
     {:noreply, %{state | status: :down}}
   end
 
@@ -43,7 +43,7 @@ defmodule UtMonitorLib.MonitorWorker.PingdomWorker do
         NotificationEngine.display_data({:pingdom_error, check_id})
       _ -> true
     end
-    Process.send_after(self, :refresh, @polling_interval)
+    Process.send_after(self(), :refresh, @polling_interval)
     {:noreply, %{state | status: :up}}
   end
 
