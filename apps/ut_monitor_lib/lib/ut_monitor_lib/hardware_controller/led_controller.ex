@@ -49,7 +49,7 @@ defmodule UtMonitorLib.HardwareController.LedController do
   ## HELPER METHODS ##
 
   defp send_command(display_buffer, command) do
-    Board.send_command(command_prefix(display_buffer) <> command <> command_suffix)
+    Board.send_command(command_prefix(display_buffer) <> command <> command_suffix())
   end
 
   defp send_pixels(display_buffer, pixels) do
@@ -57,7 +57,7 @@ defmodule UtMonitorLib.HardwareController.LedController do
     pixel_commands = pixels |>
       Enum.chunk(5, 5, []) |>
       Enum.map(fn(pix_list) -> Enum.map_join(pix_list, &LedPixel.to_command(&1)) end)
-    suffix = [command_suffix]
+    suffix = [command_suffix()]
     Board.batch_commands(prefix ++ pixel_commands ++ suffix)
   end
 
@@ -66,6 +66,6 @@ defmodule UtMonitorLib.HardwareController.LedController do
   end
 
   defp command_suffix do
-    "flush:0:display:continue:"
+    "flush:continue:"
   end
 end

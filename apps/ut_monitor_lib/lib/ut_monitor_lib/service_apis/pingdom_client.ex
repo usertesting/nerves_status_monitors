@@ -2,7 +2,7 @@ defmodule UtMonitorLib.ServiceApis.PingdomClient do
   use Tesla
 
   plug Tesla.Middleware.BaseUrl, "https://api.pingdom.com/api/2.0"
-  plug Tesla.Middleware.Headers, %{"Authorization" =>  "Basic " <> Base.encode64(Application.get_env(:ut_monitor_lib, :pingdom).user_name <> ":" <> Application.get_env(:ut_monitor_lib, :pingdom).password) }
+  plug Tesla.Middleware.Headers, %{"Authorization" =>  "Basic " <> Base.encode64(Application.get_env(:ut_monitor_lib, :pingdom).user_name <> ":" <> Application.get_env(:ut_monitor_lib, :pingdom).password)}
   plug Tesla.Middleware.Headers, %{"App-Key" => Application.get_env(:ut_monitor_lib, :pingdom).application_id}
   plug Tesla.Middleware.JSON
 

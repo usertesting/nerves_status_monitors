@@ -11,14 +11,14 @@ defmodule UtMonitorLib.MonitorWorker.HoneybadgerWorker do
   end
 
   def init(project_id) do
-    send(self, :wait_for_wifi)
+    send(self(), :wait_for_wifi)
     {:ok, %{project_id: project_id}}
   end
 
   def handle_info(:wait_for_wifi, state) do
     case Nerves.NetworkInterface.status("wlan0") do
-      {:ok, %{is_up: true}} -> send(self, :refresh)
-      _ -> Process.send_after(self, :wait_for_wifi, 1000)
+      {:ok, %{is_up: true}} -> send(self(), :refresh)
+      _ -> Process.send_after(self(), :wait_for_wifi, 1000)
     end
     {:noreply, state}
   end
@@ -42,7 +42,7 @@ defmodule UtMonitorLib.MonitorWorker.HoneybadgerWorker do
       msg ->
         Logger.error "Unknown message in Honeybadger worker: " <> inspect(msg)
     end
-    Process.send_after(self, :refresh, @polling_interval)
+    Process.send_after(self(), :refresh, @polling_interval)
     {:noreply, state}
   end
 end

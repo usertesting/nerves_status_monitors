@@ -7,7 +7,7 @@ defmodule UtMonitorBench.Mixfile do
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps]
+     deps: deps()]
   end
 
   # Configuration for the OTP application
@@ -35,7 +35,7 @@ defmodule UtMonitorBench.Mixfile do
     [
       {:ut_monitor_lib, in_umbrella: true},
       {:credo, "~> 0.4", only: [:dev, :test]},
-      {:apex, "~>0.7.0"}
+      {:apex, "~> 1.0.0"}
     ]
   end
 end

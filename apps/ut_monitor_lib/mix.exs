@@ -28,11 +28,11 @@ defmodule UtMonitorLib.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:tesla, "~> 0.5.0"},
+      {:tesla, "~> 0.6.0"},
       {:poison, ">= 1.0.0"},
       {:timex, "~> 3.0"},
       {:credo, "~> 0.4", only: [:dev, :test]},
-      {:apex, "~>0.7.0"}
+      {:apex, "~> 1.0.0"}
     ]
   end
 end

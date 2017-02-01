@@ -12,7 +12,7 @@ defmodule UtMonitorFw do
     :os.cmd('modprobe mt7603e')
     # Define workers and child supervisors to be supervised
     children = [
-      worker(Task, [fn -> network end], restart: :transient),
+      worker(Task, [fn -> network() end], restart: :transient),
       worker(UtMonitorLib.Board, [@arduino_tty, %{speed: @arduino_baud}]),
       worker(UtMonitorLib.NotificationEngine, []),
       supervisor(UtMonitorLib.MonitorSupervisor, []),

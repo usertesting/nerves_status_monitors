@@ -14,11 +14,10 @@ defmodule UtMonitorLib.LedPixel do
   def black_pixel(repeat \\ 0) do
     %LedPixel{l: 0, repeat: repeat}
   end
-  
+
   def error_pixel(repeat \\ 0) do
     %LedPixel{h: 240, effect: "breathe", repeat: repeat}
   end
-  
 
   defp effect_str(nil) do
     ""
@@ -31,11 +30,11 @@ defmodule UtMonitorLib.LedPixel do
   defp repeat_str(0) do
     ""
   end
-  
+
   defp repeat_str(repeat) do
     "#{repeat}:repeat:"
   end
-  
+
   @max_brightness 50
   @min_brightness 14
   def age_to_lightness(age, slices) do

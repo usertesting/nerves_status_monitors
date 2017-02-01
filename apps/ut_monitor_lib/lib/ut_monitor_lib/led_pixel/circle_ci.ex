@@ -12,10 +12,10 @@ defmodule UtMonitorLib.LedPixel.CircleCi do
       Enum.reverse
   end
 
-  @error_hue 0 
+  @error_hue 0
   def error_pixels do
     [
-      %LedPixel{h: @error_hue, s: 255, effect: :blink, repeat: 2 },
+      %LedPixel{h: @error_hue, s: 255, effect: :blink, repeat: 2},
       LedPixel.black_pixel
     ]
   end
@@ -39,12 +39,12 @@ defmodule UtMonitorLib.LedPixel.CircleCi do
       x when x in [:success, :fixed]  -> 120 # green
       x when x in [:failed] -> 0 # red
       x when x in [:timed_out, :circleci_failure] -> 40
-      x when x in [:running] -> 60 
+      x when x in [:running] -> 60
       x when x in [:canceled] -> 80 #yellow
-      _ -> 180 
+      _ -> 180
     end
   end
-  
+
   defp build_effect(status) do
     case status do
       x when x in [:running, :queued, :scheduled, :not_running] -> "breathe"
