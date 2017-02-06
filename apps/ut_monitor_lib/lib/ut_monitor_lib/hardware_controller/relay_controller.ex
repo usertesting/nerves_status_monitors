@@ -44,11 +44,11 @@ defmodule UtMonitorLib.HardwareController.RelayController do
   ## HELPER METHODS ##
 
   defp pin_on(pin) do
-    Board.send_command("::" <> pin <> ":pinon:")
+    Board.send_command(pin <> ":pon:")
   end
 
   defp pin_off(pin) do
-    Board.send_command("::" <> pin <> ":pinoff:")
+    Board.send_command(pin <> ":pof:")
   end
 
 end

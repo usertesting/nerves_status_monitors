@@ -35,7 +35,7 @@ defmodule UtMonitorLib.LedPixel.Apdex do
   end
 
   defp apdex_effect(apdex) when apdex < @apdex_blink_threshhold do
-    "blink"
+    "bli"
   end
 
   defp apdex_effect(_) do

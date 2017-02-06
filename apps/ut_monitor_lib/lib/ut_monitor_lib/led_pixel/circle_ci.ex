@@ -47,8 +47,8 @@ defmodule UtMonitorLib.LedPixel.CircleCi do
 
   defp build_effect(status) do
     case status do
-      x when x in [:running, :queued, :scheduled, :not_running] -> "breathe"
-      x when x in [:timed_out, :circleci_failure] -> "blink"
+      x when x in [:running, :queued, :scheduled, :not_running] -> "bre"
+      x when x in [:timed_out, :circleci_failure] -> "bli"
       _ -> nil
     end
   end

@@ -60,11 +60,11 @@ defmodule UtMonitorLib.LedPixel.Honeybadger do
   end
 
   defp honeybadger_effect(log_error_count) when log_error_count > 3 do
-    "blink"
+    "bli"
   end
 
   defp honeybadger_effect(log_error_count) when log_error_count > 2.5 do
-    "breathe"
+    "bre"
   end
 
   defp honeybadger_effect(_) do

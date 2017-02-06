@@ -27,12 +27,12 @@ defmodule UtMonitorLib.HardwareController.LedController do
   def init(display_buffer) do
     Logger.info "Starting LED Controller on buffer #{display_buffer}"
     str_buf = Integer.to_string(display_buffer)
-    send_command(str_buf, "reset:erase:")
+    send_command(str_buf, "rst:era:")
     {:ok, %{display_buffer: str_buf}}
   end
 
   def handle_call(:clear, _from, state = %{display_buffer: display_buffer}) do
-    send_command(display_buffer, "erase:")
+    send_command(display_buffer, "era:")
     {:reply, :ok, state}
   end
 
@@ -49,7 +49,7 @@ defmodule UtMonitorLib.HardwareController.LedController do
   ## HELPER METHODS ##
 
   defp send_command(display_buffer, command) do
-    Board.send_command(command_prefix(display_buffer) <> command <> command_suffix())
+    Board.send_command(command_prefix(display_buffer) <> command)
   end
 
   defp send_pixels(display_buffer, pixels) do
@@ -57,15 +57,10 @@ defmodule UtMonitorLib.HardwareController.LedController do
     pixel_commands = pixels |>
       Enum.chunk(5, 5, []) |>
       Enum.map(fn(pix_list) -> Enum.map_join(pix_list, &LedPixel.to_command(&1)) end)
-    suffix = [command_suffix()]
-    Board.batch_commands(prefix ++ pixel_commands ++ suffix)
+    Board.batch_commands(prefix ++ pixel_commands)
   end
 
   defp command_prefix(display_buffer) do
-    "::pause:" <> display_buffer <> ":display:"
-  end
-
-  defp command_suffix do
-    "flush:continue:"
+    display_buffer <> ":dis:"
   end
 end

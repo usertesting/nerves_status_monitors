@@ -21,3 +21,6 @@ config :ut_monitor_fw, :hardware_spec,
 
 # import_config "#{Mix.Project.config[:target]}.exs"
 import_config "secret.exs"
+
+config :nerves, :firmware,
+  rootfs_additions: "config/rootfs-additions"

@@ -24,12 +24,16 @@ defmodule UtMonitorLib.Board do
   end
 
   def handle_call({:send_command, command_str}, _from, state = %{conn: conn}) do
+    get_board_attn(conn)
     send_and_wait_ack(conn, command_str)
+    let_board_resume(conn)
     {:reply, :ok, state}
   end
 
   def handle_call({:batch_commands, commands}, _from, state = %{conn: conn}) do
+    get_board_attn(conn)
     Enum.each(commands, &send_and_wait_ack(conn, &1))
+    let_board_resume(conn)
     {:reply, :ok, state}
   end
 
@@ -43,6 +47,15 @@ defmodule UtMonitorLib.Board do
     Logger.info("Sending to Arduino: " <> command)
     Nerves.UART.write(conn, command)
     {:ok, "k"} = Nerves.UART.read(conn)
+  end
+
+  defp get_board_attn(conn) do
+    send_and_wait_ack(conn, ":::")
+    send_and_wait_ack(conn, "pau:pau:")
+  end
+
+  defp let_board_resume(conn) do
+    send_and_wait_ack(conn, "flu:cnt:")
   end
 
 end
